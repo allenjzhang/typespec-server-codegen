@@ -1,6 +1,6 @@
 namespace PetStore.Tests
 {
-    public class Tests
+    public class PetsClientTests
     {
         [Test]
         public async Task Validate_GetPet()
