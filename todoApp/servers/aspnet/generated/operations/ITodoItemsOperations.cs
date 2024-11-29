@@ -16,8 +16,8 @@ namespace Todo.Service
     public interface ITodoItemsOperations
     {
         Task<TodoPage> ListAsync(int? limit, int? offset);
-        Task<TodoItem> CreateAsync(string contentType, TodoItem item, object[]? attachments);
-        Task<JsonNode> GetAsync(long id);
+        Task<TodoItem> CreateAsync(string contentType, TodoItem item, object[] attachments);
+        Task<TodoItem> GetAsync(long id);
         Task<TodoItem> UpdateAsync(string contentType, long id, TodoItemPatch patch);
         Task DeleteAsync(long id);
 

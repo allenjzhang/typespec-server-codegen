@@ -33,9 +33,9 @@ namespace Todo.Service.Controllers
         [HttpPost]
         [Route("/items")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(TodoItem))]
-        public virtual async Task<IActionResult> Create([FromHeader(Name = "Content-Type")] string contentType = "application/json", Model0 body)
+        public virtual async Task<IActionResult> Create(TodoItem item, [FromHeader(Name = "Content-Type")] string contentType = "application/json", object[] attachments = null)
         {
-            var result = await TodoItemsOperationsImpl.CreateAsync(contentType, body);
+            var result = await TodoItemsOperationsImpl.CreateAsync(contentType, item, attachments);
             return Ok(result);
         }
 
@@ -53,7 +53,7 @@ namespace Todo.Service.Controllers
         [HttpPatch]
         [Route("/items/{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(TodoItem))]
-        public virtual async Task<IActionResult> Update([FromHeader(Name = "Content-Type")] string contentType = "application/merge-patch+json", long id, TodoItemPatch body)
+        public virtual async Task<IActionResult> Update(long id, TodoItemPatch body, [FromHeader(Name = "Content-Type")] string contentType = "application/merge-patch+json")
         {
             var result = await TodoItemsOperationsImpl.UpdateAsync(contentType, id, body);
             return Ok(result);
