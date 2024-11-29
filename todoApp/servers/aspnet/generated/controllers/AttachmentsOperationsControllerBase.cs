@@ -14,10 +14,20 @@ using Todo.Service;
 namespace Todo.Service.Controllers
 {
     [ApiController]
-    public abstract partial class AttachmentsControllerBase : ControllerBase
+    public abstract partial class AttachmentsOperationsControllerBase : ControllerBase
     {
 
-        internal abstract IAttachments AttachmentsImpl { get; }
+        internal abstract IAttachmentsOperations AttachmentsOperationsImpl { get; }
+
+
+        [HttpGet]
+        [Route("/items/{itemId}/attachments")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(Placeholder))]
+        public virtual async Task<IActionResult> List(long itemId)
+        {
+            var result = await AttachmentsOperationsImpl.ListAsync(itemId);
+            return Ok(result);
+        }
 
 
         [HttpPost]
@@ -25,7 +35,7 @@ namespace Todo.Service.Controllers
         [ProducesResponseType((int)HttpStatusCode.NoContent, Type = typeof(void))]
         public virtual async Task<IActionResult> CreateAttachment(long itemId, object body)
         {
-            await AttachmentsImpl.CreateAttachmentAsync(itemId, body);
+            await AttachmentsOperationsImpl.CreateAttachmentAsync(itemId, body);
             return Ok();
         }
 

@@ -13,8 +13,9 @@ using Todo.Service.Models;
 namespace Todo.Service
 {
 
-    public interface IAttachments
+    public interface IAttachmentsOperations
     {
+        Task<JsonNode> ListAsync(long itemId);
         Task CreateAttachmentAsync(long itemId, object contents);
 
     }
