@@ -20,12 +20,6 @@
     </license>
   </licenses>
 
-  <repositories>
-    <repository>
-      <id>clientcore</id>
-      <url>https://clientcore.blob.core.windows.net/artifacts</url>
-    </repository>
-  </repositories>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spotless.skip>false</spotless.skip>

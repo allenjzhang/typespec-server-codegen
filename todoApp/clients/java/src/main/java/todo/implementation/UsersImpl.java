@@ -67,7 +67,6 @@ public final class UsersImpl {
      *     username: String (Required)
      *     email: String (Required)
      *     password: String (Required)
-     *     validated: Boolean (Required)
      * }
      * }
      * </pre>

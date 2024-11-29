@@ -40,12 +40,6 @@ public final class User implements JsonSerializable<User> {
     @Metadata(generated = true)
     private final String password;
 
-    /*
-     * Whether the user is validated. Never visible to the API.
-     */
-    @Metadata(generated = true)
-    private Boolean validated;
-
     /**
      * Creates an instance of User class.
      * 
@@ -102,16 +96,6 @@ public final class User implements JsonSerializable<User> {
     }
 
     /**
-     * Get the validated property: Whether the user is validated. Never visible to the API.
-     * 
-     * @return the validated value.
-     */
-    @Metadata(generated = true)
-    public Boolean isValidated() {
-        return this.validated;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Metadata(generated = true)
@@ -140,7 +124,6 @@ public final class User implements JsonSerializable<User> {
             String username = null;
             String email = null;
             String password = null;
-            Boolean validated = null;
             while (reader.nextToken() != JsonToken.END_OBJECT) {
                 String fieldName = reader.getFieldName();
                 reader.nextToken();
@@ -153,15 +136,12 @@ public final class User implements JsonSerializable<User> {
                     email = reader.getString();
                 } else if ("password".equals(fieldName)) {
                     password = reader.getString();
-                } else if ("validated".equals(fieldName)) {
-                    validated = reader.getNullable(JsonReader::getBoolean);
                 } else {
                     reader.skipChildren();
                 }
             }
             User deserializedUser = new User(username, email, password);
             deserializedUser.id = id;
-            deserializedUser.validated = validated;
 
             return deserializedUser;
         });

@@ -41,7 +41,6 @@ public final class UsersClient {
      *     username: String (Required)
      *     email: String (Required)
      *     password: String (Required)
-     *     validated: Boolean (Required)
      * }
      * }
      * </pre>

@@ -240,7 +240,7 @@ public final class TodoClientBuilder implements HttpTrait<TodoClientBuilder>, Pr
         policies.add(retryOptions == null ? new HttpRetryPolicy() : new HttpRetryPolicy(retryOptions));
         this.pipelinePolicies.stream().forEach(p -> policies.add(p));
         if (keyCredential != null) {
-            policies.add(new KeyCredentialPolicy("session-id", keyCredential, null));
+            policies.add(new KeyCredentialPolicy("authorization", keyCredential, "Bearer"));
         }
         httpPipelineBuilder.policies(policies.toArray(new HttpPipelinePolicy[0]));
         return httpPipelineBuilder.build();
