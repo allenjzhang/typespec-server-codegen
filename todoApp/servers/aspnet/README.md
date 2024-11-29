@@ -1,4 +1,4 @@
-# PetStore ASP.NET WebAPI project
+# TodoApp ASP.NET WebAPI project
 
 The current folder contains Widget ASP.NET core basic project with basic service stub code for out of box run-ability.
 
@@ -20,7 +20,7 @@ If you would like to recreate the server folder from scratch, please follow thes
 using Microsoft.AspNetCore.Mvc;
 
 // Replace `XXX` with the name of the controller
-namespace PetStore.Service.Controllers
+namespace Todo.Service.Controllers
 {
     [ApiController]
     public class `XXX`Controller : `XXX`ControllerBase
@@ -29,3 +29,7 @@ namespace PetStore.Service.Controllers
     }
 }
 ```
+
+**IMPORTANT NOTE**: Because currently there are [a few bugs](https://github.com/microsoft/typespec/issues/5221) in the http-server-csharp package, you need to manually fix the generated code.
+1. There are a few classes in `MissingAttributes` directory. These are types that should be generated but not yet, they will not be overridden by regeneration.
+2. Modifications must be done for some generated files. Because server gen does not support customized files as client gen does - we have to manually fix them on the generated files instead. These changes will be overridden if regenerate - please reapply them using [this commit](https://github.com/allenjzhang/typespec-e2e-demo/pull/9/commits/57d1826717cc29cbdbb53e39835e8d58a5d3a118) as reference.

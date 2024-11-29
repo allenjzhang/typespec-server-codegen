@@ -9,11 +9,10 @@ using System.Text.Json.Serialization;
 namespace Todo.Service.Models
 {
 
-    ///<summary>
-    /// Something is wrong with me.
-    ///</summary>
-    public partial class Standard5XxResponse : ApiError
+    public partial class PageTodoAttachment
     {
+        public object[] Items { get; set; }
+
 
     }
 }

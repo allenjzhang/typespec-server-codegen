@@ -14,13 +14,22 @@ namespace Todo.Models
     {
         /// <summary> The TodoPage. </summary>
         /// <param name="items"> The items in the page. </param>
-        /// <param name="pagination"></param>
+        /// <param name="pageSize"> The number of items returned in this page. </param>
+        /// <param name="totalSize"> The total number of items. </param>
+        /// <param name="prevLink"> A link to the previous page, if it exists. </param>
+        /// <param name="nextLink"> A link to the next page, if it exists. </param>
         /// <returns> A new <see cref="Models.TodoPage"/> instance for mocking. </returns>
-        public static TodoPage TodoPage(IEnumerable<TodoItem> items = default, TodoPagePagination pagination = default)
+        public static TodoPage TodoPage(IEnumerable<TodoItem> items = default, int pageSize = default, int totalSize = default, Uri prevLink = default, Uri nextLink = default)
         {
             items ??= new ChangeTrackingList<TodoItem>();
 
-            return new TodoPage(items?.ToList(), pagination, additionalBinaryDataProperties: null);
+            return new TodoPage(
+                items?.ToList(),
+                pageSize,
+                totalSize,
+                prevLink,
+                nextLink,
+                additionalBinaryDataProperties: null);
         }
 
         /// <summary> The TodoItem. </summary>
@@ -62,18 +71,6 @@ namespace Todo.Models
         {
 
             return new TodoLabelRecord(name, color, additionalBinaryDataProperties: null);
-        }
-
-        /// <summary> The TodoPagePagination. </summary>
-        /// <param name="pageSize"> The number of items returned in this page. </param>
-        /// <param name="totalSize"> The total number of items. </param>
-        /// <param name="prevLink"> A link to the previous page, if it exists. </param>
-        /// <param name="nextLink"> A link to the next page, if it exists. </param>
-        /// <returns> A new <see cref="Models.TodoPagePagination"/> instance for mocking. </returns>
-        public static TodoPagePagination TodoPagePagination(int pageSize = default, int totalSize = default, Uri prevLink = default, Uri nextLink = default)
-        {
-
-            return new TodoPagePagination(pageSize, totalSize, prevLink, nextLink, additionalBinaryDataProperties: null);
         }
 
         /// <summary> The TodoFileAttachment. </summary>
