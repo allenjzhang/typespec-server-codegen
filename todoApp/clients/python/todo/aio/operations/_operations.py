@@ -3,7 +3,21 @@
 from io import IOBase
 import json
 import sys
-from typing import Any, Callable, Dict, IO, List, Optional, TYPE_CHECKING, Type, TypeVar, Union, cast, overload
+from typing import (
+    Any,
+    AsyncIterable,
+    Callable,
+    Dict,
+    IO,
+    List,
+    Optional,
+    TYPE_CHECKING,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+    overload,
+)
 
 from corehttp.exceptions import (
     ClientAuthenticationError,
@@ -15,6 +29,7 @@ from corehttp.exceptions import (
     StreamConsumedError,
     map_error,
 )
+from corehttp.paging import AsyncItemPaged, AsyncList
 from corehttp.rest import AsyncHttpResponse, HttpRequest
 from corehttp.runtime.pipeline import PipelineResponse
 from corehttp.utils import case_insensitive_dict
@@ -220,19 +235,24 @@ class TodoItemsOperations:
             self._client, self._config, self._serialize, self._deserialize
         )
 
-    async def list(
+    def list(
         self, *, limit: Optional[int] = None, offset: Optional[int] = None, **kwargs: Any
-    ) -> _models.TodoPage:
+    ) -> AsyncIterable["_models.TodoItem"]:
         """list.
 
         :keyword limit: The limit to the number of items. Default value is None.
         :paramtype limit: int
         :keyword offset: The offset to start paginating at. Default value is None.
         :paramtype offset: int
-        :return: TodoPage. The TodoPage is compatible with MutableMapping
-        :rtype: ~todo.models.TodoPage
+        :return: An iterator like instance of TodoItem
+        :rtype: ~corehttp.paging.AsyncItemPaged[~todo.models.TodoItem]
         :raises ~corehttp.exceptions.HttpResponseError:
         """
+        _headers = kwargs.pop("headers", {}) or {}
+        _params = kwargs.pop("params", {}) or {}
+
+        cls: ClsType[List[_models.TodoItem]] = kwargs.pop("cls", None)
+
         error_map: MutableMapping = {
             401: ClientAuthenticationError,
             404: ResourceNotFoundError,
@@ -253,45 +273,54 @@ class TodoItemsOperations:
         }
         error_map.update(kwargs.pop("error_map", {}) or {})
 
-        _headers = kwargs.pop("headers", {}) or {}
-        _params = kwargs.pop("params", {}) or {}
+        def prepare_request(next_link=None):
+            if not next_link:
 
-        cls: ClsType[_models.TodoPage] = kwargs.pop("cls", None)
+                _request = build_todo_items_list_request(
+                    limit=limit,
+                    offset=offset,
+                    headers=_headers,
+                    params=_params,
+                )
+                path_format_arguments = {
+                    "endpoint": self._serialize.url(
+                        "self._config.endpoint", self._config.endpoint, "str", skip_quote=True
+                    ),
+                }
+                _request.url = self._client.format_url(_request.url, **path_format_arguments)
 
-        _request = build_todo_items_list_request(
-            limit=limit,
-            offset=offset,
-            headers=_headers,
-            params=_params,
-        )
-        path_format_arguments = {
-            "endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, "str", skip_quote=True),
-        }
-        _request.url = self._client.format_url(_request.url, **path_format_arguments)
+            else:
+                _request = HttpRequest("GET", next_link)
+                path_format_arguments = {
+                    "endpoint": self._serialize.url(
+                        "self._config.endpoint", self._config.endpoint, "str", skip_quote=True
+                    ),
+                }
+                _request.url = self._client.format_url(_request.url, **path_format_arguments)
 
-        _stream = kwargs.pop("stream", False)
-        pipeline_response: PipelineResponse = await self._client.pipeline.run(_request, stream=_stream, **kwargs)
+            return _request
 
-        response = pipeline_response.http_response
+        async def extract_data(pipeline_response):
+            deserialized = pipeline_response.http_response.json()
+            list_of_elem = _deserialize(List[_models.TodoItem], deserialized["items"])
+            if cls:
+                list_of_elem = cls(list_of_elem)  # type: ignore
+            return deserialized.get("nextLink") or None, AsyncList(list_of_elem)
 
-        if response.status_code not in [200]:
-            if _stream:
-                try:
-                    await response.read()  # Load the body in memory and close the socket
-                except (StreamConsumedError, StreamClosedError):
-                    pass
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            raise HttpResponseError(response=response)
+        async def get_next(next_link=None):
+            _request = prepare_request(next_link)
 
-        if _stream:
-            deserialized = response.iter_bytes()
-        else:
-            deserialized = _deserialize(_models.TodoPage, response.json())
+            _stream = False
+            pipeline_response: PipelineResponse = await self._client.pipeline.run(_request, stream=_stream, **kwargs)
+            response = pipeline_response.http_response
 
-        if cls:
-            return cls(pipeline_response, deserialized, {})  # type: ignore
+            if response.status_code not in [200]:
+                map_error(status_code=response.status_code, response=response, error_map=error_map)
+                raise HttpResponseError(response=response)
 
-        return deserialized  # type: ignore
+            return pipeline_response
+
+        return AsyncItemPaged(get_next, extract_data)
 
     @overload
     async def create(
@@ -708,15 +737,21 @@ class TodoItemsAttachmentsOperations:
         self._serialize = input_args.pop(0) if input_args else kwargs.pop("serializer")
         self._deserialize = input_args.pop(0) if input_args else kwargs.pop("deserializer")
 
-    async def list(self, item_id: int, **kwargs: Any) -> Optional[_models.PageTodoAttachment]:
+    def list(self, item_id: int, **kwargs: Any) -> AsyncIterable["_types.TodoAttachment"]:
         """list.
 
         :param item_id: Required.
         :type item_id: int
-        :return: PageTodoAttachment or None. The PageTodoAttachment is compatible with MutableMapping
-        :rtype: ~todo.models.PageTodoAttachment or None
+        :return: An iterator like instance of TodoFileAttachment or TodoUrlAttachment
+        :rtype: ~corehttp.paging.AsyncItemPaged[~todo.models.TodoFileAttachment or
+         ~todo.models.TodoUrlAttachment]
         :raises ~corehttp.exceptions.HttpResponseError:
         """
+        _headers = kwargs.pop("headers", {}) or {}
+        _params = kwargs.pop("params", {}) or {}
+
+        cls: ClsType[List["_types.TodoAttachment"]] = kwargs.pop("cls", None)
+
         error_map: MutableMapping = {
             401: ClientAuthenticationError,
             404: ResourceNotFoundError,
@@ -737,46 +772,53 @@ class TodoItemsAttachmentsOperations:
         }
         error_map.update(kwargs.pop("error_map", {}) or {})
 
-        _headers = kwargs.pop("headers", {}) or {}
-        _params = kwargs.pop("params", {}) or {}
+        def prepare_request(next_link=None):
+            if not next_link:
 
-        cls: ClsType[Optional[_models.PageTodoAttachment]] = kwargs.pop("cls", None)
+                _request = build_todo_items_attachments_list_request(
+                    item_id=item_id,
+                    headers=_headers,
+                    params=_params,
+                )
+                path_format_arguments = {
+                    "endpoint": self._serialize.url(
+                        "self._config.endpoint", self._config.endpoint, "str", skip_quote=True
+                    ),
+                }
+                _request.url = self._client.format_url(_request.url, **path_format_arguments)
 
-        _request = build_todo_items_attachments_list_request(
-            item_id=item_id,
-            headers=_headers,
-            params=_params,
-        )
-        path_format_arguments = {
-            "endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, "str", skip_quote=True),
-        }
-        _request.url = self._client.format_url(_request.url, **path_format_arguments)
-
-        _stream = kwargs.pop("stream", False)
-        pipeline_response: PipelineResponse = await self._client.pipeline.run(_request, stream=_stream, **kwargs)
-
-        response = pipeline_response.http_response
-
-        if response.status_code not in [200, 404]:
-            if _stream:
-                try:
-                    await response.read()  # Load the body in memory and close the socket
-                except (StreamConsumedError, StreamClosedError):
-                    pass
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            raise HttpResponseError(response=response)
-
-        deserialized = None
-        if response.status_code == 200:
-            if _stream:
-                deserialized = response.iter_bytes()
             else:
-                deserialized = _deserialize(_models.PageTodoAttachment, response.json())
+                _request = HttpRequest("GET", next_link)
+                path_format_arguments = {
+                    "endpoint": self._serialize.url(
+                        "self._config.endpoint", self._config.endpoint, "str", skip_quote=True
+                    ),
+                }
+                _request.url = self._client.format_url(_request.url, **path_format_arguments)
 
-        if cls:
-            return cls(pipeline_response, deserialized, {})  # type: ignore
+            return _request
 
-        return deserialized  # type: ignore
+        async def extract_data(pipeline_response):
+            deserialized = pipeline_response.http_response.json()
+            list_of_elem = _deserialize(List["_types.TodoAttachment"], deserialized["items"])
+            if cls:
+                list_of_elem = cls(list_of_elem)  # type: ignore
+            return None, AsyncList(list_of_elem)
+
+        async def get_next(next_link=None):
+            _request = prepare_request(next_link)
+
+            _stream = False
+            pipeline_response: PipelineResponse = await self._client.pipeline.run(_request, stream=_stream, **kwargs)
+            response = pipeline_response.http_response
+
+            if response.status_code not in [200, 404]:
+                map_error(status_code=response.status_code, response=response, error_map=error_map)
+                raise HttpResponseError(response=response)
+
+            return pipeline_response
+
+        return AsyncItemPaged(get_next, extract_data)
 
     @overload
     async def create_attachment(

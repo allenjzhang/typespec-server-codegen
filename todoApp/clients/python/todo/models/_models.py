@@ -3,18 +3,19 @@
 # pylint: disable=useless-super-delegation
 
 import datetime
-from typing import Any, List, Literal, Mapping, Optional, TYPE_CHECKING, overload
+from typing import Any, Literal, Mapping, Optional, TYPE_CHECKING, overload
 
 from .. import _model_base
 from .._model_base import rest_field
 
 if TYPE_CHECKING:
-    from .. import _types, models as _models
+    from .. import _types
 
 
 class ApiError(_model_base.Model):
     """ApiError.
 
+    All required parameters must be populated in order to send to server.
 
     :ivar code: A machine readable error code. Required.
     :vartype code: str
@@ -242,6 +243,7 @@ class GetResponse(_model_base.Model):
 class InvalidTodoItem(ApiError):
     """InvalidTodoItem.
 
+    All required parameters must be populated in order to send to server.
 
     :ivar code: A machine readable error code. Required.
     :vartype code: str
@@ -273,6 +275,7 @@ class InvalidUserResponse(ApiError):
 
     Readonly variables are only populated by the server, and will be ignored when sending a request.
 
+    All required parameters must be populated in order to send to server.
 
     :ivar message: A human readable message. Required.
     :vartype message: str
@@ -302,39 +305,10 @@ class InvalidUserResponse(ApiError):
         self.code: Literal["invalid-user"] = "invalid-user"
 
 
-class PageTodoAttachment(_model_base.Model):
-    """PageTodoAttachment.
-
-
-    :ivar items_property: Required.
-    :vartype items_property: list[~todo.models.TodoFileAttachment or
-     ~todo.models.TodoUrlAttachment]
-    """
-
-    items_property: List["_types.TodoAttachment"] = rest_field(name="items")
-    """Required."""
-
-    @overload
-    def __init__(
-        self,
-        *,
-        items_property: List["_types.TodoAttachment"],
-    ) -> None: ...
-
-    @overload
-    def __init__(self, mapping: Mapping[str, Any]) -> None:
-        """
-        :param mapping: raw JSON to initialize the model.
-        :type mapping: Mapping[str, Any]
-        """
-
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
-
-
 class Standard4XXResponse(ApiError):
     """Something is wrong with you.
 
+    All required parameters must be populated in order to send to server.
 
     :ivar code: A machine readable error code. Required.
     :vartype code: str
@@ -364,6 +338,7 @@ class Standard4XXResponse(ApiError):
 class Standard5XXResponse(ApiError):
     """Something is wrong with me.
 
+    All required parameters must be populated in order to send to server.
 
     :ivar code: A machine readable error code. Required.
     :vartype code: str
@@ -585,55 +560,6 @@ class TodoLabelRecord(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class TodoPage(_model_base.Model):
-    """TodoPage.
-
-
-    :ivar items_property: The items in the page. Required.
-    :vartype items_property: list[~todo.models.TodoItem]
-    :ivar page_size: The number of items returned in this page. Required.
-    :vartype page_size: int
-    :ivar total_size: The total number of items. Required.
-    :vartype total_size: int
-    :ivar prev_link: A link to the previous page, if it exists.
-    :vartype prev_link: str
-    :ivar next_link: A link to the next page, if it exists.
-    :vartype next_link: str
-    """
-
-    items_property: List["_models.TodoItem"] = rest_field(name="items")
-    """The items in the page. Required."""
-    page_size: int = rest_field(name="pageSize")
-    """The number of items returned in this page. Required."""
-    total_size: int = rest_field(name="totalSize")
-    """The total number of items. Required."""
-    prev_link: Optional[str] = rest_field(name="prevLink")
-    """A link to the previous page, if it exists."""
-    next_link: Optional[str] = rest_field(name="nextLink")
-    """A link to the next page, if it exists."""
-
-    @overload
-    def __init__(
-        self,
-        *,
-        items_property: List["_models.TodoItem"],
-        page_size: int,
-        total_size: int,
-        prev_link: Optional[str] = None,
-        next_link: Optional[str] = None,
-    ) -> None: ...
-
-    @overload
-    def __init__(self, mapping: Mapping[str, Any]) -> None:
-        """
-        :param mapping: raw JSON to initialize the model.
-        :type mapping: Mapping[str, Any]
-        """
-
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
-
-
 class TodoUrlAttachment(_model_base.Model):
     """TodoUrlAttachment.
 
@@ -758,8 +684,6 @@ class User(_model_base.Model):
     :ivar password: The user's password, provided when creating a user
      but is otherwise not visible (and hashed by the backend). Required.
     :vartype password: str
-    :ivar validated: Whether the user is validated. Never visible to the API. Required.
-    :vartype validated: bool
     """
 
     id: int = rest_field(visibility=["read"])
@@ -771,8 +695,6 @@ class User(_model_base.Model):
     password: str = rest_field(visibility=["create"])
     """The user's password, provided when creating a user
      but is otherwise not visible (and hashed by the backend). Required."""
-    validated: bool = rest_field()
-    """Whether the user is validated. Never visible to the API. Required."""
 
     @overload
     def __init__(
@@ -781,7 +703,6 @@ class User(_model_base.Model):
         username: str,
         email: str,
         password: str,
-        validated: bool,
     ) -> None: ...
 
     @overload
@@ -800,6 +721,7 @@ class UserExistsResponse(ApiError):
 
     Readonly variables are only populated by the server, and will be ignored when sending a request.
 
+    All required parameters must be populated in order to send to server.
 
     :ivar message: A human readable message. Required.
     :vartype message: str
