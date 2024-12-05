@@ -1,5 +1,5 @@
 {
-  "name": "@unbranded/petstore",
+  "name": "PetStoreService",
   "version": "1.0.0-beta.1",
   "description": "A generated SDK for PetStoreClient.",
   "engines": {

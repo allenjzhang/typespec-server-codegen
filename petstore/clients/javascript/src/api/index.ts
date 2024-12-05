@@ -1,23 +1,5 @@
 // Licensed under the MIT License.
 
-export { PetStoreClient } from "./petStoreClient.js";
-export {
-  Insurance,
-  InsuranceUpdate,
-  CheckupUpdate,
-  Checkup,
-  CheckupCollectionWithNextLink,
-  Owner,
-  OwnerUpdate,
-  OwnerCreate,
-  OwnerCollectionWithNextLink,
-  Toy,
-  ToyCollectionWithNextLink,
-  Pet,
-  PetUpdate,
-  PetCreate,
-  PetCollectionWithNextLink,
-} from "./models/index.js";
 export {
   PetsGetOptionalParams,
   PetsUpdateOptionalParams,
@@ -43,16 +25,9 @@ export {
   OwnerCheckupsListOptionalParams,
   OwnerInsuranceGetOptionalParams,
   OwnerInsuranceUpdateOptionalParams,
-  PetStoreClientOptionalParams,
-} from "./api/index.js";
+} from "./options.js";
 export {
-  CheckupsOperations,
-  OwnerCheckupsOperations,
-  OwnerInsuranceOperations,
-  OwnersOperations,
-  PetCheckupsOperations,
-  PetInsuranceOperations,
-  PetsOperations,
-  ToyInsuranceOperations,
-  ToysOperations,
-} from "./classic/index.js";
+  createPetStore,
+  PetStoreContext,
+  PetStoreClientOptionalParams,
+} from "./petStoreContext.js";

@@ -4,7 +4,7 @@
 
 Key links:
 
-- [Package (NPM)](https://www.npmjs.com/package/@unbranded/petstore)
+- [Package (NPM)](https://www.npmjs.com/package/PetStoreService)
 
 ## Getting started
 
@@ -12,10 +12,10 @@ Key links:
 
 - LTS versions of Node.js
 
-### Install the `@unbranded/petstore` package
+### Install the `PetStoreService` package
 
 Install the PetStore client library for JavaScript with `npm`:
 
 ```bash
-npm install @unbranded/petstore
+npm install PetStoreService
 ```
