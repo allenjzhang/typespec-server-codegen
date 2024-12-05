@@ -1,59 +1,13 @@
-// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-export { PetStoreClient } from "./petStoreClient.js";
-export {
-  Insurance,
-  InsuranceUpdate,
-  CheckupUpdate,
-  Checkup,
-  CheckupCollectionWithNextLink,
-  Owner,
-  OwnerUpdate,
-  OwnerCreate,
-  OwnerCollectionWithNextLink,
-  Toy,
-  ToyCollectionWithNextLink,
-  Pet,
-  PetUpdate,
-  PetCreate,
-  PetCollectionWithNextLink,
-} from "./models/index.js";
-export {
-  PetsGetOptionalParams,
-  PetsUpdateOptionalParams,
-  PetsDeleteOptionalParams,
-  PetsCreateOptionalParams,
-  PetsListOptionalParams,
-  PetCheckupsCreateOrUpdateOptionalParams,
-  PetCheckupsListOptionalParams,
-  PetInsuranceGetOptionalParams,
-  PetInsuranceUpdateOptionalParams,
-  ToysGetOptionalParams,
-  ToysListOptionalParams,
-  ToyInsuranceGetOptionalParams,
-  ToyInsuranceUpdateOptionalParams,
-  CheckupsCreateOrUpdateOptionalParams,
-  CheckupsListOptionalParams,
-  OwnersGetOptionalParams,
-  OwnersUpdateOptionalParams,
-  OwnersDeleteOptionalParams,
-  OwnersCreateOptionalParams,
-  OwnersListOptionalParams,
-  OwnerCheckupsCreateOrUpdateOptionalParams,
-  OwnerCheckupsListOptionalParams,
-  OwnerInsuranceGetOptionalParams,
-  OwnerInsuranceUpdateOptionalParams,
-  PetStoreClientOptionalParams,
-} from "./api/index.js";
-export {
-  CheckupsOperations,
-  OwnerCheckupsOperations,
-  OwnerInsuranceOperations,
-  OwnersOperations,
-  PetCheckupsOperations,
-  PetInsuranceOperations,
-  PetsOperations,
-  ToyInsuranceOperations,
-  ToysOperations,
-} from "./classic/index.js";
+import PetStoreClient from "./petStoreClient.js";
+
+export * from "./petStoreClient.js";
+export * from "./parameters.js";
+export * from "./responses.js";
+export * from "./clientDefinitions.js";
+export * from "./isUnexpected.js";
+export * from "./models.js";
+export * from "./outputModels.js";
+
+export default PetStoreClient;

@@ -1,90 +1,35 @@
-// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { getPetsOperations, PetsOperations } from "./classic/pets/index.js";
-import {
-  getPetCheckupsOperations,
-  PetCheckupsOperations,
-} from "./classic/petCheckups/index.js";
-import {
-  getPetInsuranceOperations,
-  PetInsuranceOperations,
-} from "./classic/petInsurance/index.js";
-import { getToysOperations, ToysOperations } from "./classic/toys/index.js";
-import {
-  getToyInsuranceOperations,
-  ToyInsuranceOperations,
-} from "./classic/toyInsurance/index.js";
-import {
-  getCheckupsOperations,
-  CheckupsOperations,
-} from "./classic/checkups/index.js";
-import {
-  getOwnersOperations,
-  OwnersOperations,
-} from "./classic/owners/index.js";
-import {
-  getOwnerCheckupsOperations,
-  OwnerCheckupsOperations,
-} from "./classic/ownerCheckups/index.js";
-import {
-  getOwnerInsuranceOperations,
-  OwnerInsuranceOperations,
-} from "./classic/ownerInsurance/index.js";
-import {
-  createPetStore,
-  PetStoreContext,
-  PetStoreClientOptionalParams,
-} from "./api/index.js";
-import { Pipeline } from "@azure/core-rest-pipeline";
+import { getClient, ClientOptions } from "@typespec/ts-http-runtime";
+import { PetStoreClient } from "./clientDefinitions.js";
 
-export { PetStoreClientOptionalParams } from "./api/petStoreContext.js";
+/** The optional parameters for the client */
+export interface PetStoreClientOptions extends ClientOptions {}
 
-export class PetStoreClient {
-  private _client: PetStoreContext;
-  /** The pipeline used by this client to make requests */
-  public readonly pipeline: Pipeline;
+/**
+ * Initialize a new instance of `PetStoreClient`
+ * @param endpointParam - The parameter endpointParam
+ * @param options - the parameter for all optional parameters
+ */
+export default function createClient(
+  endpointParam: string,
+  options: PetStoreClientOptions = {},
+): PetStoreClient {
+  const endpointUrl = options.endpoint ?? options.baseUrl ?? `${endpointParam}`;
+  const userAgentInfo = `azsdk-js-PetStoreService-rest/1.0.0-beta.1`;
+  const userAgentPrefix =
+    options.userAgentOptions && options.userAgentOptions.userAgentPrefix
+      ? `${options.userAgentOptions.userAgentPrefix} ${userAgentInfo}`
+      : `${userAgentInfo}`;
+  options = {
+    ...options,
+    userAgentOptions: {
+      userAgentPrefix,
+    },
+  };
+  const client = getClient(endpointUrl, options) as PetStoreClient;
 
-  constructor(
-    endpointParam: string,
-    options: PetStoreClientOptionalParams = {},
-  ) {
-    const prefixFromOptions = options?.userAgentOptions?.userAgentPrefix;
-    const userAgentPrefix = prefixFromOptions
-      ? `${prefixFromOptions} azsdk-js-client`
-      : `azsdk-js-client`;
-    this._client = createPetStore(endpointParam, {
-      ...options,
-      userAgentOptions: { userAgentPrefix },
-    });
-    this.pipeline = this._client.pipeline;
-    this.pets = getPetsOperations(this._client);
-    this.petCheckups = getPetCheckupsOperations(this._client);
-    this.petInsurance = getPetInsuranceOperations(this._client);
-    this.toys = getToysOperations(this._client);
-    this.toyInsurance = getToyInsuranceOperations(this._client);
-    this.checkups = getCheckupsOperations(this._client);
-    this.owners = getOwnersOperations(this._client);
-    this.ownerCheckups = getOwnerCheckupsOperations(this._client);
-    this.ownerInsurance = getOwnerInsuranceOperations(this._client);
-  }
+  client.pipeline.removePolicy({ name: "ApiVersionPolicy" });
 
-  /** The operation groups for Pets */
-  public readonly pets: PetsOperations;
-  /** The operation groups for PetCheckups */
-  public readonly petCheckups: PetCheckupsOperations;
-  /** The operation groups for PetInsurance */
-  public readonly petInsurance: PetInsuranceOperations;
-  /** The operation groups for Toys */
-  public readonly toys: ToysOperations;
-  /** The operation groups for ToyInsurance */
-  public readonly toyInsurance: ToyInsuranceOperations;
-  /** The operation groups for Checkups */
-  public readonly checkups: CheckupsOperations;
-  /** The operation groups for Owners */
-  public readonly owners: OwnersOperations;
-  /** The operation groups for OwnerCheckups */
-  public readonly ownerCheckups: OwnerCheckupsOperations;
-  /** The operation groups for OwnerInsurance */
-  public readonly ownerInsurance: OwnerInsuranceOperations;
+  return client;
 }
