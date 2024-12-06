@@ -3,21 +3,7 @@
 from io import IOBase
 import json
 import sys
-from typing import (
-    Any,
-    AsyncIterable,
-    Callable,
-    Dict,
-    IO,
-    List,
-    Optional,
-    TYPE_CHECKING,
-    Type,
-    TypeVar,
-    Union,
-    cast,
-    overload,
-)
+from typing import Any, AsyncIterable, Callable, Dict, IO, List, Optional, TYPE_CHECKING, TypeVar, Union, overload
 
 from corehttp.exceptions import (
     ClientAuthenticationError,
@@ -35,7 +21,7 @@ from corehttp.runtime.pipeline import PipelineResponse
 from corehttp.utils import case_insensitive_dict
 
 from ... import models as _models
-from ..._model_base import SdkJSONEncoder, _deserialize
+from ..._model_base import SdkJSONEncoder, _deserialize, _failsafe_deserialize
 from ...operations._operations import (
     build_todo_items_attachments_create_attachment_request,
     build_todo_items_attachments_list_request,
@@ -135,33 +121,7 @@ class UsersOperations:
         :raises ~corehttp.exceptions.HttpResponseError:
         """
         error_map: MutableMapping = {
-            401: ClientAuthenticationError,
-            404: ResourceNotFoundError,
             304: ResourceNotModifiedError,
-            409: cast(
-                Type[HttpResponseError],
-                lambda response: ResourceExistsError(
-                    response=response, model=_deserialize(_models.UserExistsResponse, response.json())
-                ),
-            ),
-            422: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.InvalidUserResponse, response.json())
-                ),
-            ),
-            400: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.Standard4XXResponse, response.json())
-                ),
-            ),
-            500: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.Standard5XXResponse, response.json())
-                ),
-            ),
         }
         error_map.update(kwargs.pop("error_map", {}) or {})
 
@@ -200,8 +160,18 @@ class UsersOperations:
                     await response.read()  # Load the body in memory and close the socket
                 except (StreamConsumedError, StreamClosedError):
                     pass
-            map_error(status_code=response.status_code, response=response, error_map=error_map)  # type: ignore
-            raise HttpResponseError(response=response)
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            error = None
+            if response.status_code == 409:
+                error = _failsafe_deserialize(_models.UserExistsResponse, response.json())
+                raise ResourceExistsError(response=response, model=error)
+            elif response.status_code == 422:
+                error = _failsafe_deserialize(_models.InvalidUserResponse, response.json())
+            elif 400 <= response.status_code <= 499:
+                error = _failsafe_deserialize(_models.Standard4XXResponse, response.json())
+            elif 500 <= response.status_code <= 599:
+                error = _failsafe_deserialize(_models.Standard5XXResponse, response.json())
+            raise HttpResponseError(response=response, model=error)
 
         if _stream:
             deserialized = response.iter_bytes()
@@ -254,22 +224,7 @@ class TodoItemsOperations:
         cls: ClsType[List[_models.TodoItem]] = kwargs.pop("cls", None)
 
         error_map: MutableMapping = {
-            401: ClientAuthenticationError,
-            404: ResourceNotFoundError,
-            409: ResourceExistsError,
             304: ResourceNotModifiedError,
-            400: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.Standard4XXResponse, response.json())
-                ),
-            ),
-            500: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.Standard5XXResponse, response.json())
-                ),
-            ),
         }
         error_map.update(kwargs.pop("error_map", {}) or {})
 
@@ -316,7 +271,12 @@ class TodoItemsOperations:
 
             if response.status_code not in [200]:
                 map_error(status_code=response.status_code, response=response, error_map=error_map)
-                raise HttpResponseError(response=response)
+                error = None
+                if 400 <= response.status_code <= 499:
+                    error = _failsafe_deserialize(_models.Standard4XXResponse, response.json())
+                elif 500 <= response.status_code <= 599:
+                    error = _failsafe_deserialize(_models.Standard5XXResponse, response.json())
+                raise HttpResponseError(response=response, model=error)
 
             return pipeline_response
 
@@ -398,28 +358,7 @@ class TodoItemsOperations:
         :raises ~corehttp.exceptions.HttpResponseError:
         """
         error_map: MutableMapping = {
-            401: ClientAuthenticationError,
-            404: ResourceNotFoundError,
-            409: ResourceExistsError,
             304: ResourceNotModifiedError,
-            422: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.InvalidTodoItem, response.json())
-                ),
-            ),
-            400: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.Standard4XXResponse, response.json())
-                ),
-            ),
-            500: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.Standard5XXResponse, response.json())
-                ),
-            ),
         }
         error_map.update(kwargs.pop("error_map", {}) or {})
 
@@ -464,7 +403,14 @@ class TodoItemsOperations:
                 except (StreamConsumedError, StreamClosedError):
                     pass
             map_error(status_code=response.status_code, response=response, error_map=error_map)
-            raise HttpResponseError(response=response)
+            error = None
+            if response.status_code == 422:
+                error = _failsafe_deserialize(_models.InvalidTodoItem, response.json())
+            elif 400 <= response.status_code <= 499:
+                error = _failsafe_deserialize(_models.Standard4XXResponse, response.json())
+            elif 500 <= response.status_code <= 599:
+                error = _failsafe_deserialize(_models.Standard5XXResponse, response.json())
+            raise HttpResponseError(response=response, model=error)
 
         if _stream:
             deserialized = response.iter_bytes()
@@ -673,22 +619,7 @@ class TodoItemsOperations:
         :raises ~corehttp.exceptions.HttpResponseError:
         """
         error_map: MutableMapping = {
-            401: ClientAuthenticationError,
-            404: ResourceNotFoundError,
-            409: ResourceExistsError,
             304: ResourceNotModifiedError,
-            400: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.Standard4XXResponse, response.json())
-                ),
-            ),
-            500: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.Standard5XXResponse, response.json())
-                ),
-            ),
         }
         error_map.update(kwargs.pop("error_map", {}) or {})
 
@@ -714,7 +645,12 @@ class TodoItemsOperations:
 
         if response.status_code not in [204, 404]:
             map_error(status_code=response.status_code, response=response, error_map=error_map)
-            raise HttpResponseError(response=response)
+            error = None
+            if 400 <= response.status_code <= 499:
+                error = _failsafe_deserialize(_models.Standard4XXResponse, response.json())
+            elif 500 <= response.status_code <= 599:
+                error = _failsafe_deserialize(_models.Standard5XXResponse, response.json())
+            raise HttpResponseError(response=response, model=error)
 
         if cls:
             return cls(pipeline_response, None, {})  # type: ignore
@@ -753,22 +689,7 @@ class TodoItemsAttachmentsOperations:
         cls: ClsType[List["_types.TodoAttachment"]] = kwargs.pop("cls", None)
 
         error_map: MutableMapping = {
-            401: ClientAuthenticationError,
-            404: ResourceNotFoundError,
-            409: ResourceExistsError,
             304: ResourceNotModifiedError,
-            400: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.Standard4XXResponse, response.json())
-                ),
-            ),
-            500: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.Standard5XXResponse, response.json())
-                ),
-            ),
         }
         error_map.update(kwargs.pop("error_map", {}) or {})
 
@@ -814,7 +735,12 @@ class TodoItemsAttachmentsOperations:
 
             if response.status_code not in [200, 404]:
                 map_error(status_code=response.status_code, response=response, error_map=error_map)
-                raise HttpResponseError(response=response)
+                error = None
+                if 400 <= response.status_code <= 499:
+                    error = _failsafe_deserialize(_models.Standard4XXResponse, response.json())
+                elif 500 <= response.status_code <= 599:
+                    error = _failsafe_deserialize(_models.Standard5XXResponse, response.json())
+                raise HttpResponseError(response=response, model=error)
 
             return pipeline_response
 
@@ -878,22 +804,7 @@ class TodoItemsAttachmentsOperations:
         :raises ~corehttp.exceptions.HttpResponseError:
         """
         error_map: MutableMapping = {
-            401: ClientAuthenticationError,
-            404: ResourceNotFoundError,
-            409: ResourceExistsError,
             304: ResourceNotModifiedError,
-            400: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.Standard4XXResponse, response.json())
-                ),
-            ),
-            500: cast(
-                Type[HttpResponseError],
-                lambda response: HttpResponseError(
-                    response=response, model=_deserialize(_models.Standard5XXResponse, response.json())
-                ),
-            ),
         }
         error_map.update(kwargs.pop("error_map", {}) or {})
 
@@ -905,9 +816,9 @@ class TodoItemsAttachmentsOperations:
 
         content_type = content_type or "application/json"
         _content = None
-        if isinstance(contents, _model_base.Model):
+        if isinstance(contents, _models.TodoFileAttachment):
             _content = json.dumps(contents, cls=SdkJSONEncoder, exclude_readonly=True)  # type: ignore
-        elif isinstance(contents, _model_base.Model):
+        elif isinstance(contents, _models.TodoUrlAttachment):
             _content = json.dumps(contents, cls=SdkJSONEncoder, exclude_readonly=True)  # type: ignore
 
         _request = build_todo_items_attachments_create_attachment_request(
@@ -929,7 +840,12 @@ class TodoItemsAttachmentsOperations:
 
         if response.status_code not in [204, 404]:
             map_error(status_code=response.status_code, response=response, error_map=error_map)
-            raise HttpResponseError(response=response)
+            error = None
+            if 400 <= response.status_code <= 499:
+                error = _failsafe_deserialize(_models.Standard4XXResponse, response.json())
+            elif 500 <= response.status_code <= 599:
+                error = _failsafe_deserialize(_models.Standard5XXResponse, response.json())
+            raise HttpResponseError(response=response, model=error)
 
         if cls:
             return cls(pipeline_response, None, {})  # type: ignore
