@@ -2,18 +2,20 @@
 using PetStore.Models;
 using System.ClientModel;
 
-var petClient = new PetStoreClient(new Uri("http://localhost:5118")).GetPetsClient();
+Pets petsClient = new PetStoreClient(new Uri("http://localhost:5118")).GetPetsClient();
 
 // create a pet
-var pet = await petClient.CreateAsync(new PetCreate("Kiwi", 5, 0));
-Console.WriteLine($"Created pet: {pet.Value.Id}");
+ClientResult<Pet> petCreateResult = await petsClient.CreateAsync(new PetCreate("Kiwi", 5, 0));
+Pet pet = petCreateResult.Value;
+Console.WriteLine($"Created pet: {pet.Id}");
 
 // get a pet from id
-var petFromId = await petClient.GetAsync(pet.Value.Id);
-Console.WriteLine($"Got pet: {petFromId.Value.Name}");
+ClientResult<Pet> getPetResult = await petsClient.GetAsync(pet.Id);
+Pet petFromId = getPetResult.Value;
+Console.WriteLine($"Got pet: {petFromId.Name}");
 
 // update the update by id
-var updatedPet = await petClient.UpdateAsync(pet.Value.Id, BinaryContent.Create(BinaryData.FromObjectAsJson(new
+ClientResult updatePetResult = await petsClient.UpdateAsync(petFromId.Id, BinaryContent.Create(BinaryData.FromObjectAsJson(new
 {
     name = "Coco",
     ownerId = 314,
@@ -22,12 +24,13 @@ var updatedPet = await petClient.UpdateAsync(pet.Value.Id, BinaryContent.Create(
 Console.WriteLine("Pet updated.");
 
 // list all available pets
-var listResult = await petClient.ListAsync();
-foreach (var p in listResult.Value.Value)
+ClientResult<PetCollectionWithNextLink> listResult = await petsClient.ListAsync();
+IList<Pet> listOfPets = listResult.Value.Value;
+foreach (Pet p in listOfPets)
 {
     Console.WriteLine($"Pet: {p.Name}");
 }
 
 // delete the pet by id
-await petClient.DeleteAsync(pet.Value.Id);
+await petsClient.DeleteAsync(pet.Id);
 Console.WriteLine("Pet deleted.");
