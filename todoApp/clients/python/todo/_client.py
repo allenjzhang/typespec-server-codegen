@@ -2,7 +2,7 @@
 
 
 from copy import deepcopy
-from typing import Any, Union
+from typing import Any
 from typing_extensions import Self
 
 from corehttp.credentials import ServiceKeyCredential
@@ -23,10 +23,8 @@ class TodoClient:  # pylint: disable=client-accepts-api-version-keyword
     :vartype todo_items: todo.operations.TodoItemsOperations
     :param endpoint: Service host. Required.
     :type endpoint: str
-    :param credential: Credential used to authenticate requests to the service. Is either a
-     ServiceKeyCredential type or a ServiceKeyCredential type. Required.
-    :type credential: ~corehttp.credentials.ServiceKeyCredential or
-     ~corehttp.credentials.ServiceKeyCredential
+    :param credential: Credential used to authenticate requests to the service. Required.
+    :type credential: ~corehttp.credentials.ServiceKeyCredential
     """
 
     def __init__(self, endpoint: str, credential: ServiceKeyCredential, **kwargs: Any) -> None:
