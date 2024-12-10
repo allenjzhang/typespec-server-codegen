@@ -4,26 +4,34 @@ These sample programs show how to use the JavaScript client libraries for in som
 
 ## Prerequisites
 
-The sample programs are compatible with [LTS versions of Node.js](https://github.com/nodejs/release#release-schedule).
+- The sample programs are compatible with [LTS versions of Node.js](https://github.com/nodejs/release#release-schedule).
+
+- [.NET SDK 9.0](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) - for server
 
 
 ## Setup
 
-To run the samples using the client sdk:
+To run the samples using the grenerate code:
 
-1. Install the dependencies using `npm`:
+1. Build grenerate code in the `petstore/clients/javascript` folder:
+
+```bash
+npm install && npm run build
+```
+
+2. Install the dependencies using `npm`:
 
 ```bash
 npm install
 ```
 
-2. Change path to `/servers/aspnet` and run the server.
+3. Change path to `petstore/servers/aspnet` and run the server.
 
 ```bash
 dotnet run
 ```
 
-3. Run samples you like :
+4. Run samples you like :
 
 ```bash
 node petOperations.js
