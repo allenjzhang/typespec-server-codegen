@@ -12,7 +12,7 @@ export function createPetStore(
   options: PetStoreClientOptionalParams = {},
 ): PetStoreContext {
   const prefixFromOptions = options?.userAgentOptions?.userAgentPrefix;
-  const userAgentInfo = `azsdk-js-PetStoreService/1.0.0-beta.1`;
+  const userAgentInfo = `azsdk-js-petstore/1.0.0-beta.1`;
   const userAgentPrefix = prefixFromOptions
     ? `${prefixFromOptions} azsdk-js-api ${userAgentInfo}`
     : `azsdk-js-api ${userAgentInfo}`;

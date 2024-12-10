@@ -21,3 +21,5 @@ options:
     generateSample: false
     generateTest: false
     emitter-output-dir: "{project-root}/../clients/javascript"
+    packageDetails:
+      name: "@unbranded/petstore"
