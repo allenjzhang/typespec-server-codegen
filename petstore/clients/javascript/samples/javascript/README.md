@@ -11,15 +11,15 @@ These sample programs show how to use the JavaScript client libraries for in som
 
 ## Setup
 
-To run the samples using the grenerate code:
+To run the samples using the grenerated code:
 
-1. Build grenerate code in the `petstore/clients/javascript` folder:
+1. Build grenerated code in the `petstore/clients/javascript` folder:
 
 ```bash
 npm install && npm run build
 ```
 
-2. Install the dependencies using `npm`:
+2. Install the dependencies using `npm` in folder `samples/javascript`:
 
 ```bash
 npm install
