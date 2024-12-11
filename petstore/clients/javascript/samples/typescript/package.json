@@ -1,0 +1,19 @@
+{
+  "name": "samples",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "prebuild": "rimraf dist/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@unbranded/petstore": "../.."
+  },
+  "devDependencies": {
+    "typescript": "~5.6.2",
+    "rimraf": "5.0.5"
+  }
+}
