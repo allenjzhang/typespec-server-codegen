@@ -1,6 +1,12 @@
 import { PetStoreClient } from '@unbranded/petstore';
 
-const client = new PetStoreClient("http://localhost:5118", {
+// Load the .env file if it exists  
+import * as dotenv from "dotenv";
+dotenv.config();
+
+const endpoint = process.env["ENDPOINT"] || "<endpoint>";
+
+const client = new PetStoreClient(endpoint, {
   allowInsecureConnection: true
 });
 

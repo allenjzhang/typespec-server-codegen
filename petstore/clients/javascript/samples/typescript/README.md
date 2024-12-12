@@ -35,14 +35,16 @@ npm install
 npm run build
 ```
 
-3. Change path to `petstore/servers/aspnet` and run the server.
+3. Run the server.
 
 ```bash
-dotnet run
+dotnet run --project <RepoRoot>/petstore/servers/aspnet/petstore.csproj
 ```
 
-4. Run samples you like :
+4. Edit the file `sample.env`, adding the correct variables. Then rename the file from `sample.env` to just `.env`. The sample programs will read this file automatically.
+
+5. Run the samples:
 
 ```bash
-node dist/petOperations.js
+npm run sample
 ```

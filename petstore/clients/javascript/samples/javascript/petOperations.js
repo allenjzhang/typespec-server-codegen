@@ -1,7 +1,12 @@
-const { PetStoreClient } = require('@unbranded/petstore');
+const { PetStoreClient } = require("@unbranded/petstore");
 
-const client = new PetStoreClient("http://localhost:5118", {
-  allowInsecureConnection: true
+// Load the .env file if it exists
+require("dotenv").config();
+
+const endpoint = process.env["ENDPOINT"] || "<endpoint>";
+
+const client = new PetStoreClient(endpoint, {
+  allowInsecureConnection: true,
 });
 
 async function main() {
@@ -10,7 +15,11 @@ async function main() {
   console.log(result);
 
   // create a pet, return a pet
-  const createPet = await client.pets.create({ name: 'Test', age: 5, ownerId: 5 });
+  const createPet = await client.pets.create({
+    name: "Test",
+    age: 5,
+    ownerId: 5,
+  });
   console.log(createPet);
 
   // get a pet, return a pet
@@ -18,7 +27,11 @@ async function main() {
   console.log(getPet);
 
   // update a pet, return a pet
-  const updatePet = await client.pets.update(2, { name: 'Test', age: 5, ownerId: 5 });
+  const updatePet = await client.pets.update(2, {
+    name: "Test",
+    age: 5,
+    ownerId: 5,
+  });
   console.log(updatePet);
 
   // delete a pet, return undefined
