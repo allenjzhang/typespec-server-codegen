@@ -4,6 +4,7 @@ emit:
   - "@typespec/http-server-javascript"
   - "@typespec/http-client-java"
   - "@azure-tools/typespec-ts"
+  - "@typespec/http-client-python"
 options:
   "@typespec/http-server-csharp":
     emitter-output-dir: "{project-root}/../servers/aspnet/generated"
@@ -23,3 +24,5 @@ options:
     emitter-output-dir: "{project-root}/../clients/javascript"
     packageDetails:
       name: "@unbranded/petstore"
+  "@typespec/http-client-python":
+    emitter-output-dir: "{project-root}/../clients/python"
