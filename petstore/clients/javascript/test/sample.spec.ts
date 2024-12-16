@@ -35,6 +35,7 @@ describe("Test Samples", () => {
         try{
             await client.pets.get(-1);
         } catch (error) {
+            assert.equal(error.code, 0);
             assert.equal(error.message, 'Invalid petId');
         }
 
@@ -42,6 +43,7 @@ describe("Test Samples", () => {
         try{
             await client.pets.get(15);
         } catch (error) {
+            assert.equal(error.code, 1);
             assert.equal(error.message, 'Pet not found');
         }
     });
@@ -75,6 +77,7 @@ describe("Test Samples", () => {
         try{
             await client.pets.update(-1,pet);
         } catch (error) {
+            assert.equal(error.code, 0);
             assert.equal(error.message, 'Invalid petId');
         }
 
@@ -82,6 +85,7 @@ describe("Test Samples", () => {
         try{
             await client.pets.update(15,pet);
         } catch (error) {
+            assert.equal(error.code, 1);
             assert.equal(error.message, 'Pet not found');
         }
     });
@@ -96,6 +100,7 @@ describe("Test Samples", () => {
         try{
             await client.pets.delete(-1);
         } catch (error) {
+            assert.equal(error.code, 0);
             assert.equal(error.message, 'Invalid petId');
         }
 
@@ -103,6 +108,7 @@ describe("Test Samples", () => {
         try{
             await client.pets.delete(15);
         } catch (error) {
+            assert.equal(error.code, 1);
             assert.equal(error.message, 'Pet not found');
         }
     });
