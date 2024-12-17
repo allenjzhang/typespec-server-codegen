@@ -36,7 +36,8 @@ describe("PetOperations Samples", () => {
   });
 
   it("get a invalid pet", async function () {
-    // get a invalid pet, return error message is Invalid petId
+    // get a invalid pet, return error message is Invalid petId. 
+    // refer to: https://github.com/allenjzhang/typespec-e2e-demo/blob/main/petstore/servers/aspnet/implemented_apis.md
     try {
       await client.pets.get(-1);
     } catch (error) {
