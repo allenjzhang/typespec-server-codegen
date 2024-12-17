@@ -69,22 +69,6 @@ describe("PetOperations Samples", () => {
     assert.equal(result.name, "Kiwi");
     assert.equal(result.age, 5);
     assert.equal(result.ownerId, 5);
-
-    // update a invalid pet, return error message is Invalid petId
-    try {
-      await client.pets.update(-1, pet);
-    } catch (error) {
-      assert.equal(error.code, 0);
-      assert.equal(error.message, "Invalid petId");
-    }
-
-    // update a non existent pet, return error message is Pet not found
-    try {
-      await client.pets.update(15, pet);
-    } catch (error) {
-      assert.equal(error.code, 1);
-      assert.equal(error.message, "Pet not found");
-    }
   });
 
   it("pet update a invalid pet", async function () {
