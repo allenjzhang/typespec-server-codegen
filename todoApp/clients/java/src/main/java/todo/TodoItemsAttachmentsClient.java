@@ -8,6 +8,8 @@ import io.clientcore.core.http.exception.HttpResponseException;
 import io.clientcore.core.http.models.RequestOptions;
 import io.clientcore.core.http.models.Response;
 import io.clientcore.core.util.binarydata.BinaryData;
+import java.util.Objects;
+import todo.implementation.MultipartFormDataHelper;
 import todo.implementation.TodoItemsAttachmentsImpl;
 import todo.todoitems.PageTodoAttachment;
 
@@ -43,12 +45,15 @@ public final class TodoItemsAttachmentsClient {
     }
 
     /**
-     * The createAttachment operation.
+     * The createUrlAttachment operation.
      * <p><strong>Request Body Schema</strong></p>
      * 
      * <pre>
      * {@code
-     * BinaryData
+     * {
+     *     description: String (Required)
+     *     url: String (Required)
+     * }
      * }
      * </pre>
      * 
@@ -59,9 +64,25 @@ public final class TodoItemsAttachmentsClient {
      * @return the response.
      */
     @Metadata(generated = true)
-    public Response<Void> createAttachmentWithResponse(long itemId, BinaryData contents,
+    public Response<Void> createUrlAttachmentWithResponse(long itemId, BinaryData contents,
         RequestOptions requestOptions) {
-        return this.serviceClient.createAttachmentWithResponse(itemId, contents, requestOptions);
+        return this.serviceClient.createUrlAttachmentWithResponse(itemId, contents, requestOptions);
+    }
+
+    /**
+     * The createFileAttachment operation.
+     * 
+     * @param itemId The itemId parameter.
+     * @param body The body parameter.
+     * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
+     * @throws HttpResponseException thrown if the service returns an error.
+     * @return the response.
+     */
+    @Metadata(generated = true)
+    Response<Void> createFileAttachmentWithResponse(long itemId, BinaryData body, RequestOptions requestOptions) {
+        // Protocol API requires serialization of parts with content-disposition and data, as operation
+        // 'createFileAttachment' is 'multipart/form-data'
+        return this.serviceClient.createFileAttachmentWithResponse(itemId, body, requestOptions);
     }
 
     /**
@@ -81,7 +102,7 @@ public final class TodoItemsAttachmentsClient {
     }
 
     /**
-     * The createAttachment operation.
+     * The createUrlAttachment operation.
      * 
      * @param itemId The itemId parameter.
      * @param contents The contents parameter.
@@ -90,9 +111,30 @@ public final class TodoItemsAttachmentsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @Metadata(generated = true)
-    public void createAttachment(long itemId, BinaryData contents) {
-        // Generated convenience method for createAttachmentWithResponse
+    public void createUrlAttachment(long itemId, TodoUrlAttachment contents) {
+        // Generated convenience method for createUrlAttachmentWithResponse
         RequestOptions requestOptions = new RequestOptions();
-        createAttachmentWithResponse(itemId, contents, requestOptions).getValue();
+        createUrlAttachmentWithResponse(itemId, BinaryData.fromObject(contents), requestOptions).getValue();
+    }
+
+    /**
+     * The createFileAttachment operation.
+     * 
+     * @param itemId The itemId parameter.
+     * @param body The body parameter.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws HttpResponseException thrown if the service returns an error.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @Metadata(generated = true)
+    public void createFileAttachment(long itemId, FileAttachmentMultipartRequest body) {
+        // Generated convenience method for createFileAttachmentWithResponse
+        RequestOptions requestOptions = new RequestOptions();
+        createFileAttachmentWithResponse(itemId,
+            new MultipartFormDataHelper(requestOptions)
+                .serializeTextField("contents", Objects.toString(body.getContents()))
+                .end()
+                .getRequestBody(),
+            requestOptions).getValue();
     }
 }
