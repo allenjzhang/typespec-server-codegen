@@ -475,7 +475,7 @@ public final class TodoItemsAttachmentsImpl {
             exceptionBodyClass = Standard5XXResponse.class)
         @UnexpectedResponseExceptionDetail(statusCode = { 404 }, exceptionBodyClass = NotFoundErrorResponse.class)
         @UnexpectedResponseExceptionDetail
-        Response<Void> createUrlAttachmentSync(@HostParam("endpoint") String endpoint,
+        Response<Void> createJsonAttachmentSync(@HostParam("endpoint") String endpoint,
             @HeaderParam("content-type") String contentType, @PathParam("itemId") long itemId,
             @HeaderParam("Accept") String accept, @BodyParam("application/json") BinaryData contents,
             RequestOptions requestOptions);
@@ -712,14 +712,15 @@ public final class TodoItemsAttachmentsImpl {
     }
 
     /**
-     * The createUrlAttachment operation.
+     * The createJsonAttachment operation.
      * <p><strong>Request Body Schema</strong></p>
      * 
      * <pre>
      * {@code
      * {
-     *     description: String (Required)
-     *     url: String (Required)
+     *     filename: String (Required)
+     *     mediaType: String (Required)
+     *     contents: byte[] (Required)
      * }
      * }
      * </pre>
@@ -730,11 +731,11 @@ public final class TodoItemsAttachmentsImpl {
      * @throws HttpResponseException thrown if the service returns an error.
      * @return the response.
      */
-    public Response<Void> createUrlAttachmentWithResponse(long itemId, BinaryData contents,
+    public Response<Void> createJsonAttachmentWithResponse(long itemId, BinaryData contents,
         RequestOptions requestOptions) {
         final String contentType = "application/json";
         final String accept = "application/json";
-        return service.createUrlAttachmentSync(this.client.getEndpoint(), contentType, itemId, accept, contents,
+        return service.createJsonAttachmentSync(this.client.getEndpoint(), contentType, itemId, accept, contents,
             requestOptions);
     }
 

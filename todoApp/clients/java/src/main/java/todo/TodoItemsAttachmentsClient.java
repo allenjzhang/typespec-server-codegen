@@ -45,14 +45,15 @@ public final class TodoItemsAttachmentsClient {
     }
 
     /**
-     * The createUrlAttachment operation.
+     * The createJsonAttachment operation.
      * <p><strong>Request Body Schema</strong></p>
      * 
      * <pre>
      * {@code
      * {
-     *     description: String (Required)
-     *     url: String (Required)
+     *     filename: String (Required)
+     *     mediaType: String (Required)
+     *     contents: byte[] (Required)
      * }
      * }
      * </pre>
@@ -64,9 +65,9 @@ public final class TodoItemsAttachmentsClient {
      * @return the response.
      */
     @Metadata(generated = true)
-    public Response<Void> createUrlAttachmentWithResponse(long itemId, BinaryData contents,
+    public Response<Void> createJsonAttachmentWithResponse(long itemId, BinaryData contents,
         RequestOptions requestOptions) {
-        return this.serviceClient.createUrlAttachmentWithResponse(itemId, contents, requestOptions);
+        return this.serviceClient.createJsonAttachmentWithResponse(itemId, contents, requestOptions);
     }
 
     /**
@@ -102,7 +103,7 @@ public final class TodoItemsAttachmentsClient {
     }
 
     /**
-     * The createUrlAttachment operation.
+     * The createJsonAttachment operation.
      * 
      * @param itemId The itemId parameter.
      * @param contents The contents parameter.
@@ -111,10 +112,10 @@ public final class TodoItemsAttachmentsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @Metadata(generated = true)
-    public void createUrlAttachment(long itemId, TodoUrlAttachment contents) {
-        // Generated convenience method for createUrlAttachmentWithResponse
+    public void createJsonAttachment(long itemId, TodoAttachment contents) {
+        // Generated convenience method for createJsonAttachmentWithResponse
         RequestOptions requestOptions = new RequestOptions();
-        createUrlAttachmentWithResponse(itemId, BinaryData.fromObject(contents), requestOptions).getValue();
+        createJsonAttachmentWithResponse(itemId, BinaryData.fromObject(contents), requestOptions).getValue();
     }
 
     /**
