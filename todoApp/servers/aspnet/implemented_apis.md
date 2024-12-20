@@ -1,18 +1,19 @@
 # Implemented operations and behaviors
 
-## `Pets`
+## `Users`
 
-### `Pets.get`
+### `Users.create`
 
-- Endpoint: `/pets/{petId}`
+- Endpoint: `/users`
 
 - Returns:
 
-| petId | HTTP Code | Response body |
+| condition | HTTP Code | Response body |
 | :-- | :-- | :-- |
-| 0 <= petId <= 10 | 200 | `{ "id": petId, "age": 5, "name": "Kiwi", "ownerId": 5 }` |
-| petId < 0 | 400 | `{ "code": 0, "message": "Invalid petId" }` |
-| petId > 10 | 404 | `{ "code": 1, "message": "Pet not found" }` |
+| 0 <= request.id <= 10 | 200 | echos the request, plus a `token` property in this format: `{id}-{name}` |
+| request.id < 0 | 422 | `{ "code": "invalid-user", "message": "Invalid user Id" }` |
+| request.id > 10 | 409 | `{ "code": "user-exists", "message": "User already exists" }` |
+| request does not meet the constraint | 422 | `{ "code": "invalid-user", "message": "Invalid user data" }` |
 
 ### `Pets.create`
 
