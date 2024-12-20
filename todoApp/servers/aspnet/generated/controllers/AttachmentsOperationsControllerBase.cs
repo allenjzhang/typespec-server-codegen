@@ -22,7 +22,7 @@ namespace Todo.Service.Controllers
 
         [HttpGet]
         [Route("/items/{itemId}/attachments")]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(Placeholder))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(TodoAttachmentList))]
         public virtual async Task<IActionResult> List(long itemId)
         {
             var result = await AttachmentsOperationsImpl.ListAsync(itemId);

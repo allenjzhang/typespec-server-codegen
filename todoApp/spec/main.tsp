@@ -239,7 +239,7 @@ namespace TodoItems {
      code: "not-found";
   }
 
-  //@friendlyName("{name}List", T)
+  @friendlyName("{name}List", T)
   model Page<T> {
     @pageItems items: T[];
   }

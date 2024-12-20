@@ -1,6 +1,6 @@
 emit:
  - "@typespec/openapi3"
- - "@typespec/http-server-csharp"
+ - "@typespec/http-server-csharp" # csharp server gen now produces code that cannot compile, disable it until it is fixed.
  - "@typespec/http-client-csharp"
  - "@typespec/http-client-java"
 #  - "@typespec/http-server-javascript" # js server gen throws error: Error: Unimplemented: new form of multipart requests
