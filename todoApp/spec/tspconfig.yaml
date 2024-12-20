@@ -4,6 +4,7 @@ emit:
  - "@typespec/http-client-csharp"
  - "@typespec/http-client-java"
  - "@typespec/http-server-javascript"
+ - "@typespec/http-client-python"
 options:
   "@typespec/openapi3":
     emitter-output-dir: "{project-root}/../openapi3"
@@ -16,3 +17,5 @@ options:
     express: true
   "@typespec/http-client-java":
     emitter-output-dir: "{project-root}/../clients/java"
+  "@typespec/http-client-python":
+    emitter-output-dir: "{project-root}/../clients/python"
