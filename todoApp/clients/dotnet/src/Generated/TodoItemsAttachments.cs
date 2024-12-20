@@ -15,9 +15,9 @@ namespace Todo
     public partial class TodoItemsAttachments
     {
         private readonly Uri _endpoint;
-        private const string AuthorizationHeader = "session-id";
         /// <summary> A credential used to authenticate to the service. </summary>
         private readonly ApiKeyCredential _keyCredential;
+        private const string AuthorizationHeader = "session-id";
 
         /// <summary> Initializes a new instance of TodoItemsAttachments for mocking. </summary>
         protected TodoItemsAttachments()
@@ -74,24 +74,24 @@ namespace Todo
         /// <param name="itemId"></param>
         /// <param name="cancellationToken"> The cancellation token that can be used to cancel the operation. </param>
         /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        public virtual ClientResult<PageTodoAttachment> List(long itemId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<TodoAttachmentList> List(long itemId, CancellationToken cancellationToken = default)
         {
             ClientResult result = List(itemId, cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null);
-            return ClientResult.FromValue((PageTodoAttachment)result, result.GetRawResponse());
+            return ClientResult.FromValue((TodoAttachmentList)result, result.GetRawResponse());
         }
 
         /// <summary> list. </summary>
         /// <param name="itemId"></param>
         /// <param name="cancellationToken"> The cancellation token that can be used to cancel the operation. </param>
         /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        public virtual async Task<ClientResult<PageTodoAttachment>> ListAsync(long itemId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<TodoAttachmentList>> ListAsync(long itemId, CancellationToken cancellationToken = default)
         {
             ClientResult result = await ListAsync(itemId, cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null).ConfigureAwait(false);
-            return ClientResult.FromValue((PageTodoAttachment)result, result.GetRawResponse());
+            return ClientResult.FromValue((TodoAttachmentList)result, result.GetRawResponse());
         }
 
         /// <summary>
-        /// [Protocol Method] createAttachment
+        /// [Protocol Method] createUrlAttachment
         /// <list type="bullet">
         /// <item>
         /// <description> This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios. </description>
@@ -104,16 +104,16 @@ namespace Todo
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
         /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
         /// <returns> The response returned from the service. </returns>
-        public virtual ClientResult CreateAttachment(long itemId, BinaryContent content, RequestOptions options = null)
+        public virtual ClientResult CreateUrlAttachment(long itemId, BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));
 
-            using PipelineMessage message = CreateCreateAttachmentRequest(itemId, content, options);
+            using PipelineMessage message = CreateCreateUrlAttachmentRequest(itemId, content, options);
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
         /// <summary>
-        /// [Protocol Method] createAttachment
+        /// [Protocol Method] createUrlAttachment
         /// <list type="bullet">
         /// <item>
         /// <description> This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios. </description>
@@ -126,38 +126,84 @@ namespace Todo
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
         /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
         /// <returns> The response returned from the service. </returns>
-        public virtual async Task<ClientResult> CreateAttachmentAsync(long itemId, BinaryContent content, RequestOptions options = null)
+        public virtual async Task<ClientResult> CreateUrlAttachmentAsync(long itemId, BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));
 
-            using PipelineMessage message = CreateCreateAttachmentRequest(itemId, content, options);
+            using PipelineMessage message = CreateCreateUrlAttachmentRequest(itemId, content, options);
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        /// <summary> createAttachment. </summary>
+        /// <summary> createUrlAttachment. </summary>
         /// <param name="itemId"></param>
         /// <param name="contents"></param>
         /// <param name="cancellationToken"> The cancellation token that can be used to cancel the operation. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="contents"/> is null. </exception>
         /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        public virtual ClientResult CreateAttachment(long itemId, BinaryData contents, CancellationToken cancellationToken = default)
+        public virtual ClientResult CreateUrlAttachment(long itemId, TodoAttachment contents, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(contents, nameof(contents));
 
-            return CreateAttachment(itemId, BinaryContent.Create(contents), cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null);
+            return CreateUrlAttachment(itemId, contents, cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null);
         }
 
-        /// <summary> createAttachment. </summary>
+        /// <summary> createUrlAttachment. </summary>
         /// <param name="itemId"></param>
         /// <param name="contents"></param>
         /// <param name="cancellationToken"> The cancellation token that can be used to cancel the operation. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="contents"/> is null. </exception>
         /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        public virtual async Task<ClientResult> CreateAttachmentAsync(long itemId, BinaryData contents, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult> CreateUrlAttachmentAsync(long itemId, TodoAttachment contents, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(contents, nameof(contents));
 
-            return await CreateAttachmentAsync(itemId, BinaryContent.Create(contents), cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null).ConfigureAwait(false);
+            return await CreateUrlAttachmentAsync(itemId, contents, cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// [Protocol Method] createFileAttachment
+        /// <list type="bullet">
+        /// <item>
+        /// <description> This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios. </description>
+        /// </item>
+        /// </list>
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="contentType"> The contentType to use which has the multipart/form-data boundary. </param>
+        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+        /// <returns> The response returned from the service. </returns>
+        public virtual ClientResult CreateFileAttachment(long itemId, BinaryContent content, string contentType, RequestOptions options = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateCreateFileAttachmentRequest(itemId, content, contentType, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+
+        /// <summary>
+        /// [Protocol Method] createFileAttachment
+        /// <list type="bullet">
+        /// <item>
+        /// <description> This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios. </description>
+        /// </item>
+        /// </list>
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="contentType"> The contentType to use which has the multipart/form-data boundary. </param>
+        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+        /// <returns> The response returned from the service. </returns>
+        public virtual async Task<ClientResult> CreateFileAttachmentAsync(long itemId, BinaryContent content, string contentType, RequestOptions options = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateCreateFileAttachmentRequest(itemId, content, contentType, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
     }
 }
