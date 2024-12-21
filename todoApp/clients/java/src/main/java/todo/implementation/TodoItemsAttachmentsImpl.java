@@ -18,7 +18,7 @@ import io.clientcore.core.util.binarydata.BinaryData;
 import todo.Standard4XXResponse;
 import todo.Standard5XXResponse;
 import todo.todoitems.NotFoundErrorResponse;
-import todo.todoitems.PageTodoAttachment;
+import todo.todoitems.TodoAttachmentList;
 
 /**
  * An instance of this class provides access to all the operations defined in TodoItemsAttachments.
@@ -261,7 +261,7 @@ public final class TodoItemsAttachmentsImpl {
             exceptionBodyClass = Standard5XXResponse.class)
         @UnexpectedResponseExceptionDetail(statusCode = { 404 }, exceptionBodyClass = NotFoundErrorResponse.class)
         @UnexpectedResponseExceptionDetail
-        Response<PageTodoAttachment> listSync(@HostParam("endpoint") String endpoint, @PathParam("itemId") long itemId,
+        Response<TodoAttachmentList> listSync(@HostParam("endpoint") String endpoint, @PathParam("itemId") long itemId,
             @HeaderParam("Accept") String accept, RequestOptions requestOptions);
 
         @HttpRequestInformation(
@@ -706,7 +706,7 @@ public final class TodoItemsAttachmentsImpl {
      * @throws HttpResponseException thrown if the service returns an error.
      * @return the response.
      */
-    public Response<PageTodoAttachment> listWithResponse(long itemId, RequestOptions requestOptions) {
+    public Response<TodoAttachmentList> listWithResponse(long itemId, RequestOptions requestOptions) {
         final String accept = "application/json";
         return service.listSync(this.client.getEndpoint(), itemId, accept, requestOptions);
     }

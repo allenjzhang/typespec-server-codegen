@@ -142,14 +142,14 @@ namespace Todo.Models
                 additionalBinaryDataProperties: null);
         }
 
-        /// <summary> The PageTodoAttachment. </summary>
+        /// <summary> The TodoAttachmentList. </summary>
         /// <param name="items"></param>
-        /// <returns> A new <see cref="Models.PageTodoAttachment"/> instance for mocking. </returns>
-        public static PageTodoAttachment PageTodoAttachment(IEnumerable<TodoAttachment> items = default)
+        /// <returns> A new <see cref="Models.TodoAttachmentList"/> instance for mocking. </returns>
+        public static TodoAttachmentList TodoAttachmentList(IEnumerable<TodoAttachment> items = default)
         {
             items ??= new ChangeTrackingList<TodoAttachment>();
 
-            return new PageTodoAttachment(items?.ToList(), additionalBinaryDataProperties: null);
+            return new TodoAttachmentList(items?.ToList(), additionalBinaryDataProperties: null);
         }
 
         /// <summary> The User. </summary>

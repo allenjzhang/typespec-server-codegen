@@ -11,7 +11,7 @@ import io.clientcore.core.util.binarydata.BinaryData;
 import java.util.Objects;
 import todo.implementation.MultipartFormDataHelper;
 import todo.implementation.TodoItemsAttachmentsImpl;
-import todo.todoitems.PageTodoAttachment;
+import todo.todoitems.TodoAttachmentList;
 
 /**
  * Initializes a new instance of the synchronous TodoClient type.
@@ -40,7 +40,7 @@ public final class TodoItemsAttachmentsClient {
      * @return the response.
      */
     @Metadata(generated = true)
-    public Response<PageTodoAttachment> listWithResponse(long itemId, RequestOptions requestOptions) {
+    public Response<TodoAttachmentList> listWithResponse(long itemId, RequestOptions requestOptions) {
         return this.serviceClient.listWithResponse(itemId, requestOptions);
     }
 
@@ -96,7 +96,7 @@ public final class TodoItemsAttachmentsClient {
      * @return the response.
      */
     @Metadata(generated = true)
-    public PageTodoAttachment list(long itemId) {
+    public TodoAttachmentList list(long itemId) {
         // Generated convenience method for listWithResponse
         RequestOptions requestOptions = new RequestOptions();
         return listWithResponse(itemId, requestOptions).getValue();
